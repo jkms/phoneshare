@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from flask import Flask, jsonify, abort, make_response, request
 app = Flask(__name__)
 # https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
