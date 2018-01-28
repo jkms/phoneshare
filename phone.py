@@ -7,8 +7,13 @@ import hashlib
 import time
 import datetime
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('-r', '--redishost', help='Name or IP of Redis host', nargs='?', const='localhost', type=str, default='localhost')
+args = parser.parse_args()
+
 r = redis.Redis(
-    host='localhost',
+    host=args.redishost,
     charset='utf-8'
 )
 m = hashlib.sha256()

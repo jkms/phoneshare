@@ -70,3 +70,23 @@ Date: Sun, 28 Jan 2018 12:40:50 GMT
   ]                         
 }                           
 ```
+
+
+## Docker
+
+### build
+
+```
+$ docker build -t phonebank .
+```
+
+### Run
+
+be sure to include the ip/hostname of your redis server:
+```
+$ docker run --rm -it -p 5000:5000 -e REDISHOST=172.17.0.3 phonebank
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)                                                
+ * Restarting with stat                             
+ * Debugger is active!                              
+ * Debugger PIN: 147-029-686                        
+```
