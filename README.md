@@ -2,9 +2,10 @@
 I have no clue what I'm doing
 
 requires:
-*flask
-*redis
-*phonenumbers
+
+* flask
+* redis
+* phonenumbers
 
 
 ## Examples
