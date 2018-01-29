@@ -43,7 +43,7 @@ def hello_world():
 def get_number2(e164):
     hget_number = hashlib.sha256()
     hget_number.update(bytes(e164, encoding='utf-8'))
-    name = r.hget(hget_number.hexdigest(), 'name').decode('ascii')
+    name = decode(r.hget(hget_number.hexdigest(), 'name'))
     #    if len(number) == 0:
     #        abort(404)
     #    return jsonify({'number': [number]})
@@ -54,7 +54,6 @@ def get_number2(e164):
 def get_calls(e164):
     he164 = hashlib.sha256()
     he164.update(bytes(e164, encoding='utf-8'))
-    # e164calls = r.hvals('calls:' + he164.hexdigest())#.decode('ascii')
     print('calls:' + he164.hexdigest())
     call_list = decode(r.hvals('calls:' + he164.hexdigest()))
     print(call_list)
@@ -71,7 +70,7 @@ def create_number2():
         abort(400)
 
     r.hset(hget_number.hexdigest(), 'name', request.json['name'])
-    return jsonify({'Name': r.hget(hget_number.hexdigest(), 'name').decode('ascii')}), 201
+    return jsonify({'Name': decode(r.hget(hget_number.hexdigest(), 'name'))}), 201
 
 
 @app.route('/api/v1.0/campaign/create', methods=['POST'])
@@ -96,7 +95,7 @@ def create_call():
         abort(400)
     calltime = time.time()
     r.hset('calls:' + he164.hexdigest(), int(calltime), datetime.datetime.fromtimestamp(calltime))
-    return jsonify({'Time Stamp': r.hget('calls:' + he164.hexdigest(), int(calltime)).decode('ascii')}), 201
+    return jsonify({'Time Stamp': decode(r.hget('calls:' + he164.hexdigest(), int(calltime)))}), 201
 
 
 @app.errorhandler(404)
