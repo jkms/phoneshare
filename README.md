@@ -12,7 +12,7 @@ requires:
 
 Retrieving
 ```
-$ curl -i http://localhost:5000/api/v1.0/numbers/+16048675309
+$ curl -i http://localhost:5000/api/v1.0/number/get/+16048675309
 HTTP/1.0 200 OK
 Content-Type: application/json
 Content-Length: 22
@@ -26,7 +26,7 @@ Date: Sun, 28 Jan 2018 03:32:26 GMT
 
 Setting
 ```
-$ curl -i -H "Content-Type: application/json" -X POST -d '{"e164":"+5551234567", "name":"No One"}' http://localhost:5000/api/v1.0/numbers
+$ curl -i -H "Content-Type: application/json" -X POST -d '{"e164":"+5551234567", "name":"No One"}' http://localhost:5000/api/v1.0/number/create
 HTTP/1.0 201 CREATED
 Content-Type: application/json
 Content-Length: 23
@@ -40,7 +40,7 @@ Date: Sun, 28 Jan 2018 03:34:23 GMT
 
 Adding a call:
 ```
-$ curl -i -H "Content-Type: application/json" -X POST -d '{"e164":"+16048675309"}' http://localhost:5000/api/v1.0/calls
+$ curl -i -H "Content-Type: application/json" -X POST -d '{"e164":"+16048675309"}' http://localhost:5000/api/v1.0/call/create
 HTTP/1.0 201 CREATED        
 Content-Type: application/json                          
 Content-Length: 49          
@@ -54,7 +54,7 @@ Date: Sun, 28 Jan 2018 12:40:02 GMT
 
 Retrieving calls:
 ```
-$ curl -i http://localhost:5000/api/v1.0/calls/+16048675309                               
+$ curl -i http://localhost:5000/api/v1.0/call/get/+16048675309
 HTTP/1.0 201 CREATED        
 Content-Type: application/json                          
 Content-Length: 159         
