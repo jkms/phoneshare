@@ -2,7 +2,8 @@
 
 from flask import Flask, jsonify, abort, make_response, request
 
-import redis
+# import redis
+import pymysql
 import hashlib
 import time
 import datetime
@@ -13,18 +14,29 @@ app = Flask(__name__)
 # https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-r', '--redishost', help='Name or IP of Redis host', nargs='?', const='localhost', type=str,
+parser.add_argument('-r', '--redishost',
+                    help='Name or IP of Redis host',
+                    nargs='?',
+                    const='localhost',
+                    type=str,
                     default='localhost')
+
 args = parser.parse_args()
 
-r = redis.Redis(
-    host=args.redishost,
-    charset='utf-8'
-)
+# r = redis.Redis(
+#     host=args.redishost,
+#     charset='utf-8'
+# )
+db = pymysql.connect(args.redishost,
+                     "phonebank",
+                     "phonebank",
+                     "phonebank")
+
 m = hashlib.sha256()
 m.update(b'+16048675309')
 
-r.hset(m.hexdigest(), 'name', 'Jenny')
+
+# r.hset(m.hexdigest(), 'name', 'Jenny')
 
 
 def decode(l):
