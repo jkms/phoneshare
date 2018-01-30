@@ -43,13 +43,25 @@ sql = """INSERT INTO e164(hash,
    VALUES ('%s', 'test')"""
 try:
     # Execute the SQL command
-    print(sql % (m.hexdigest()))
     cursor.execute(sql % (m.hexdigest()))
     # Commit your changes in the database
     db.commit()
 except:
     # Rollback in case there is any error
     db.rollback()
+
+# Prepare SQL query to INSERT a record into the database.
+sql = "SELECT * FROM e164"
+try:
+    # Execute the SQL command
+    cursor.execute(sql)
+    # Fetch all the rows in a list of lists.
+    results = cursor.fetchall()
+    # Now print fetched result
+    for row in results:
+        print("hash = %s,whatever = %s" % (row[0], row[1]))
+except:
+    print("Error: unable to fetch data")
 
 db.close()
 
@@ -93,24 +105,47 @@ def create_call():
 def get_number(e164):
     hget_number = hashlib.sha256()
     hget_number.update(bytes(e164, encoding='utf-8'))
-    name = decode(r.hget(hget_number.hexdigest(), 'name'))
-    #    if len(number) == 0:
-    #        abort(404)
-    #    return jsonify({'number': [number]})
-    return jsonify({'Name': name})
+    db = pymysql.connect(args.redishost,
+                         "phonebank",
+                         "phonebank",
+                         "phonebank")
+    cursor = db.cursor()
+    sql = "SELECT * FROM e164 WHERE HASH = '%s'" % (hget_number.hexdigest())
+    try:
+        # Execute the SQL command
+        cursor.execute(sql)
+        # Fetch all the rows in a list of lists.
+        results = cursor.fetchall()
+        # Now print fetched result
+        return jsonify({'Result': results})
+    except:
+        return jsonify({'Error': 'Unable to fetch data'})
 
 
 @app.route('/api/v1.0/number/create', methods=['POST'])
 def create_number():
     hget_number = hashlib.sha256()
     hget_number.update(bytes(request.json['e164'], encoding='utf-8'))
-    if r.exists(hget_number.hexdigest()):
-        abort(400)
-    if not request.json or 'e164' not in request.json:
-        abort(400)
-
-    r.hset(hget_number.hexdigest(), 'name', request.json['name'])
-    return jsonify({'Name': decode(r.hget(hget_number.hexdigest(), 'name'))}), 201
+    db = pymysql.connect(args.redishost,
+                         "phonebank",
+                         "phonebank",
+                         "phonebank")
+    cursor = db.cursor()
+    sql = """INSERT INTO e164(hash,
+       value)
+       VALUES ('%s', 'test')"""
+    try:
+        # Execute the SQL command
+        cursor.execute(sql % (hget_number.hexdigest()))
+        # Commit your changes in the database
+        db.commit()
+        db.close()
+        return jsonify({'Hash': hget_number.hexdigest()}), 201
+    except:
+        # Rollback in case there is any error
+        db.rollback()
+        db.close()
+        return jsonify({'Fail': 'No idea what happened'}), 400
 
 
 @app.route('/api/v1.0/campaign/create', methods=['POST'])
