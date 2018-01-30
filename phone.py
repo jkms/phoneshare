@@ -27,16 +27,31 @@ args = parser.parse_args()
 #     host=args.redishost,
 #     charset='utf-8'
 # )
-db = pymysql.connect(args.redishost,
-                     "phonebank",
-                     "phonebank",
-                     "phonebank")
 
 m = hashlib.sha256()
 m.update(b'+16048675309')
 
-
 # r.hset(m.hexdigest(), 'name', 'Jenny')
+testsql = m.hexdigest()
+db = pymysql.connect(args.redishost,
+                     "phonebank",
+                     "phonebank",
+                     "phonebank")
+cursor = db.cursor()
+sql = """INSERT INTO e164(hash,
+   value)
+   VALUES ('%s', 'test')"""
+try:
+    # Execute the SQL command
+    print(sql % (m.hexdigest()))
+    cursor.execute(sql % (m.hexdigest()))
+    # Commit your changes in the database
+    db.commit()
+except:
+    # Rollback in case there is any error
+    db.rollback()
+
+db.close()
 
 
 def decode(l):
